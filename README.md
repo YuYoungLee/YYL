@@ -55,6 +55,7 @@
 https://youtu.be/iK_kFlgDOIk
 ---
 ## 6. 다운로드 링크
+https://drive.google.com/file/d/1qjDId2DzwVpTxgWT3p5FgunhiuWL0hJu/view?usp=sharing
 
 # LastPage Portfolio
 ---
@@ -109,3 +110,4 @@ https://youtu.be/iK_kFlgDOIk
 https://youtu.be/goe68owyowc
 ---
 ## 6. 다운로드 링크
+https://drive.google.com/file/d/1Dk5PRMGt9yXcmOjbiupmyL-QjNs_2-db/view?usp=sharing
