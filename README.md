@@ -54,6 +54,11 @@
      + 던전 결과창, 대화창, 미니 퀘스트 정보창, 상점 구매 개수 설정창, 부활창, 미니맵, SceneLoad창
   + WorldSpace
      + 피격 데미지, 퀘스트 진행 아이콘
+---
+## 5. 플레이 영상
+https://youtu.be/iK_kFlgDOIk
+---
+## 6. 다운로드 링크
 
 # LastPage Portfolio
 ---
@@ -105,3 +110,8 @@
      + 상점 구매 개수 설정창, 부활창, SceneLoad창
   + WorldSpace
      + 피격 데미지, 퀘스트 진행 아이콘
+---
+## 5. 플레이 영상
+https://youtu.be/goe68owyowc
+---
+## 6. 다운로드 링크
