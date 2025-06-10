@@ -7,49 +7,48 @@ public class Player : FSMAble, IDamageable
 {
     public override event System.Action ReturnPool;
 
-    [SerializeField] private int miPlayerKey = 0;     //ÇÃ·¹ÀÌ¾î Å°°ª
-    private Rigidbody rigid = null;         //ÇÃ·¹ÀÌ¾î rigidbody
+    [SerializeField] private int miPlayerKey = 0;     //í”Œë ˆì´ì–´ í‚¤ê°’
+    private Rigidbody rigid = null;         //í”Œë ˆì´ì–´ rigidbody
 
     [Header("Slope")]
     private RaycastHit slopeHit;
 
     private readonly float mfSlopeAngle = 45.0f;
-    private readonly int miGroundLayerMask = (1 << 8); //·¹ÀÌ¾î ¸¶½ºÅ©
+    private readonly int miGroundLayerMask = (1 << 8); //ë ˆì´ì–´ ë§ˆìŠ¤í¬
 
     [Header("CameraGeometry")]
-    [SerializeField] private Geometry geometry;     //Ä«¸Ş¶ó Å¸°Ù Áö¿À¸ŞÆ®¸®
+    [SerializeField] private Geometry geometry;     //ì¹´ë©”ë¼ íƒ€ê²Ÿ ì§€ì˜¤ë©”íŠ¸ë¦¬
 
     [Header("Anim")]
-    private PlayerAnim mAnim = null;     //ÇÃ·¹ÀÌ¾î ¿¡´Ï¸ŞÀÌ¼Ç
+    private PlayerAnim mAnim = null;     //í”Œë ˆì´ì–´ ì—ë‹ˆë©”ì´ì…˜
 
     [Header("Stat")]
-    private PlayerStat mStat = null;    //ÇÃ·¹ÀÌ¾î ½ºÅİ
+    private PlayerStat mStat = null;    //í”Œë ˆì´ì–´ ìŠ¤í…Ÿ
 
     [Header("Sound")]
     private AudioSource mPlayerSFX = null;
 
-    //Todo. Move Á¤¸®
     [Header("Movement")]
-    private Vector2 moveDir;        //¹æÇâ
-    private Vector2 rotateDir;      //È¸Àü
-    private Vector3 velocity;       //¼Ó·Â
-    private float mfYaw;              //yÃà È¸Àü
-    private float mfPitch;            //xÃà È¸Àü
+    private Vector2 moveDir;        //ë°©í–¥
+    private Vector2 rotateDir;      //íšŒì „
+    private Vector3 velocity;       //ì†ë ¥
+    private float mfYaw;              //yì¶• íšŒì „
+    private float mfPitch;            //xì¶• íšŒì „
     private const float maxRotateDir = 1.0f;
-    private Vector2 mMouseSensivity;   //¸¶¿ì½º °¨µµ
-    public bool isGround = true;                       //¶¥ À§¿¡ ÀÖ´Â °æ¿ì true
-    private readonly float mfGravity = 9.81f;           //Áß·Â°ª 9.81f
-    private readonly int miTargetLayerMask = (1 << 7);  //·¹ÀÌ¾î ¸¶½ºÅ©
-    private readonly float mfDownForce = 5.0f;          //¾Æ·¡·Î ³»·Á°¡´Â Èû (Áß·Â¿¡ * ÇÒ °ª)
-    private float jumpForce;        //Á¡ÇÁ Èû
+    private Vector2 mMouseSensivity;   //ë§ˆìš°ìŠ¤ ê°ë„
+    public bool isGround = true;                       //ë•… ìœ„ì— ìˆëŠ” ê²½ìš° true
+    private readonly float mfGravity = 9.81f;           //ì¤‘ë ¥ê°’ 9.81f
+    private readonly int miTargetLayerMask = (1 << 7);  //ë ˆì´ì–´ ë§ˆìŠ¤í¬
+    private readonly float mfDownForce = 5.0f;          //ì•„ë˜ë¡œ ë‚´ë ¤ê°€ëŠ” í˜ (ì¤‘ë ¥ì— * í•  ê°’)
+    private float jumpForce;        //ì í”„ í˜
 
-    private Vector3 mHeight;       //ÇÃ·¹ÀÌ¾î ³ôÀÌ°ª
-    private float speed;           //¼Óµµ test °ª
+    private Vector3 mHeight;       //í”Œë ˆì´ì–´ ë†’ì´ê°’
+    private float speed;           //ì†ë„ test ê°’
 
-    private List<Skill> mSkill;     //½ºÅ³
-    private Skill mAttack;    //±âº»°ø°İ
-    private Coroutine mAttackCoroutine;    //°ø°İ ÄÚ·çÆ¾
-    private Coroutine mInputStopMoveCoroutine;      //ÀÎÇ² ¸ØÃß±â
+    private List<Skill> mSkill;     //ìŠ¤í‚¬
+    private Skill mAttack;    //ê¸°ë³¸ê³µê²©
+    private Coroutine mAttackCoroutine;    //ê³µê²© ì½”ë£¨í‹´
+    private Coroutine mInputStopMoveCoroutine;      //ì¸í’‹ ë©ˆì¶”ê¸°
 
     private bool mbIsAttack;
     private bool mbIsDie;
@@ -60,23 +59,23 @@ public class Player : FSMAble, IDamageable
     public Vector3 forwardGizmo;
 
 
-    [SerializeField] private PlayerPivot mPivot;     //ÇÇº¿    
+    [SerializeField] private PlayerPivot mPivot;     //í”¼ë´‡    
 
-    private float mfRotateYDir = 1;    //YÃà È¸Àü ¹æÇâ
+    private float mfRotateYDir = 1;    //Yì¶• íšŒì „ ë°©í–¥
 
     [Header("Interaction")]
-    private List<IInteractAble> mInteractOBJ;   //»óÈ£ÀÛ¿ë ¿ÀºêÁ§Æ®
+    private List<IInteractAble> mInteractOBJ;   //ìƒí˜¸ì‘ìš© ì˜¤ë¸Œì íŠ¸
 
-    public int PlayerKey => miPlayerKey;    //ÇÃ·¹ÀÌ¾î Å°°ª
+    public int PlayerKey => miPlayerKey;    //í”Œë ˆì´ì–´ í‚¤ê°’
 
     public Vector3 GetPos
     {
         get { return rigid.position; }
-    }    //ÇÃ·¹ÀÌ¾î À§Ä¡
+    }    //í”Œë ˆì´ì–´ ìœ„ì¹˜
 
-    public PlayerStat PlayerStat => mStat;      //ÇÃ·¹ÀÌ¾î ½ºÅİ
+    public PlayerStat PlayerStat => mStat;      //í”Œë ˆì´ì–´ ìŠ¤í…Ÿ
 
-    public bool IsInteraction => mInteractOBJ.Count > 0;    //»óÈ£ÀÛ¿ë
+    public bool IsInteraction => mInteractOBJ.Count > 0;    //ìƒí˜¸ì‘ìš©
 
     public void SetActive(bool bActiveStatu) => this.gameObject.SetActive(bActiveStatu);
 
@@ -93,22 +92,22 @@ public class Player : FSMAble, IDamageable
 
     private void Update()
     {
-        Rotate();   //È¸Àü
+        Rotate();   //íšŒì „
     }
 
     public override void Initialize()
     {
-        DataManager dataMgr = GameManager.Instance.GetDataMgr();    //µ¥ÀÌÅÍ ¸Ş´ÏÀú ÀÓ½Ãº¯¼ö
+        DataManager dataMgr = GameManager.Instance.GetDataMgr();    //ë°ì´í„° ë©”ë‹ˆì € ì„ì‹œë³€ìˆ˜
 
         base.Initialize();
-        geometry.Initialize();      //Ä«¸Ş¶ó Å¸°Ù Áö¿À¸ŞÆ®¸®
+        geometry.Initialize();      //ì¹´ë©”ë¼ íƒ€ê²Ÿ ì§€ì˜¤ë©”íŠ¸ë¦¬
 
-        mAnim = new PlayerAnim();    //ÇÃ·¹ÀÌ¾î ¾Ö´Ï¸ŞÀÌ¼Ç
+        mAnim = new PlayerAnim();    //í”Œë ˆì´ì–´ ì• ë‹ˆë©”ì´ì…˜
         mAnim.SetAnim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
         mTransform = GetComponent<Transform>();
 
-        //Data °ª ÃÊ±âÈ­
+        //Data ê°’ ì´ˆê¸°í™”
         mbIsAttack = false;
         mbIsDie = false;
         velocity = Vector2.zero;
@@ -116,18 +115,18 @@ public class Player : FSMAble, IDamageable
         rotateDir = Vector2.zero;
         mfPitch = mTransform.rotation.z;
         mfYaw = mTransform.rotation.y;
-        mMouseSensivity = new Vector2(100.0f, 100.0f);  //¸¶¿ì½º ¹Î°¨µµ
-        jumpForce = 10.0f;       //Á¡ÇÁ Èû
-        speed = 5.0f;           //°öÇÒ ¼Óµµ
+        mMouseSensivity = new Vector2(100.0f, 100.0f);  //ë§ˆìš°ìŠ¤ ë¯¼ê°ë„
+        jumpForce = 10.0f;       //ì í”„ í˜
+        speed = 5.0f;           //ê³±í•  ì†ë„
 
-        //ÇÃ·¹ÀÌ¾î ½ºÅİ
+        //í”Œë ˆì´ì–´ ìŠ¤í…Ÿ
         if (mStat == null)
         {
             mStat = new PlayerStat();
         }
         mStat.Initialize(miPlayerKey);
 
-        //»ç¿îµå
+        //ì‚¬ìš´ë“œ
         if (mPlayerSFX == null)
         {
             mPlayerSFX = GetComponent<AudioSource>();
@@ -136,25 +135,25 @@ public class Player : FSMAble, IDamageable
         //Skill
         if (mSkill == null)
         {
-            mSkill = new List<Skill>();     //½ºÅ³ ¸®½ºÆ® »ı¼º
+            mSkill = new List<Skill>();     //ìŠ¤í‚¬ ë¦¬ìŠ¤íŠ¸ ìƒì„±
 
 
             foreach (int iSkillKey in dataMgr.GetPlayerData(miPlayerKey).SkillKeyList)
             {
-                Skill skill = new Skill();    //½ºÅ³´ãÀ» ÀÓ½Ãº¯¼ö
+                Skill skill = new Skill();    //ìŠ¤í‚¬ë‹´ì„ ì„ì‹œë³€ìˆ˜
                 skill.SetData(iSkillKey, miTargetLayerMask, mStat, mTransform);
                 mSkill.Add(skill);
             }
         }
 
-        //ÇÃ·¹ÀÌ¾î ±âº»°ø°İ
+        //í”Œë ˆì´ì–´ ê¸°ë³¸ê³µê²©
         if (mAttack == null)
         {
             mAttack = new Skill();
             mAttack.SetData(9, miTargetLayerMask, mStat, mTransform);
         }
 
-        //»óÈ£ÀÛ¿ë ¿ÀºêÁ§Æ®
+        //ìƒí˜¸ì‘ìš© ì˜¤ë¸Œì íŠ¸
         if (mInteractOBJ == null)
         {
             mInteractOBJ = new List<IInteractAble>();
@@ -168,11 +167,11 @@ public class Player : FSMAble, IDamageable
         ReturnPool?.Invoke();
     }
 
-    //ÇÃ·¹ÀÌ¾î ÀÎÇ²
+    //í”Œë ˆì´ì–´ ì¸í’‹
     #region Input
     public void AttackStart(InputAction.CallbackContext context)
     {
-        //¶¥ À§¿¡ ÀÖÀ» ¶§ °ø°İ ÁøÇà ¾Æ´Ò¶§¸¸
+        //ë•… ìœ„ì— ìˆì„ ë•Œ ê³µê²© ì§„í–‰ ì•„ë‹ë•Œë§Œ
         if (isGround && !mbIsAttack)
         {
             mFSM.ChangeState(FSMState.Attack);
@@ -192,35 +191,35 @@ public class Player : FSMAble, IDamageable
             return;
         }
 
-        //¶¥¿¡ ÀÖÀ»¶§
+        //ë•…ì— ìˆì„ë•Œ
         if (isGround)
         {
-            moveDir = context.ReadValue<Vector2>(); //¿òÁ÷ÀÌ´Â ¹æÇâ
+            moveDir = context.ReadValue<Vector2>(); //ì›€ì§ì´ëŠ” ë°©í–¥
             mFSM.ChangeState(FSMState.Move);
         }
         else
         {
-            moveDir = Vector2.zero;     //¸ØÃç¾ß ÇÒ °æ¿ì
+            moveDir = Vector2.zero;     //ë©ˆì¶°ì•¼ í•  ê²½ìš°
         }
 
-        velocity = rigid.transform.forward * moveDir.y + rigid.transform.right * moveDir.x; //¹æÇâ°ª ´õÇÏ±â
-        velocity = velocity.normalized * speed;             //¼Ó·Â = ¹æÇâ * ¼Óµµ;
-    }   //ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ ÀÎÇ² Ã³¸®
+        velocity = rigid.transform.forward * moveDir.y + rigid.transform.right * moveDir.x; //ë°©í–¥ê°’ ë”í•˜ê¸°
+        velocity = velocity.normalized * speed;             //ì†ë ¥ = ë°©í–¥ * ì†ë„;
+    }   //í”Œë ˆì´ì–´ ì›€ì§ì„ ì¸í’‹ ì²˜ë¦¬
 
     public void InputRotate(InputAction.CallbackContext context)
     {
         rotateDir = context.ReadValue<Vector2>();
         rotateDir *= 0.1f;
 
-        //¹æÇâ 1, -1, 0 °ªÀ¸·Î ¼³Á¤
+        //ë°©í–¥ 1, -1, 0 ê°’ìœ¼ë¡œ ì„¤ì •
         rotateDir.x = Mathf.Clamp(rotateDir.x, -maxRotateDir, maxRotateDir);
         rotateDir.y = Mathf.Clamp(rotateDir.y, -maxRotateDir, maxRotateDir);
-        rotateDir.y *= mfRotateYDir;     //»óÇÏ ¹İÀü ½Ã 1, Á¤¹æÇâ ½Ã -1°ª YÃà °öÇÏ±â
+        rotateDir.y *= mfRotateYDir;     //ìƒí•˜ ë°˜ì „ ì‹œ 1, ì •ë°©í–¥ ì‹œ -1ê°’ Yì¶• ê³±í•˜ê¸°
 
-        //È¸Àü ÇÒ ¶§ ¹æÇâ ÀüÈ¯
-        velocity = rigid.transform.forward * moveDir.y + rigid.transform.right * moveDir.x; //¹æÇâ°ª ´õÇÏ±â
-        velocity = velocity.normalized * speed;             //¼Ó·Â = ¹æÇâ * ¼Óµµ;
-    }   //È¸Àü ÀÎÇ²
+        //íšŒì „ í•  ë•Œ ë°©í–¥ ì „í™˜
+        velocity = rigid.transform.forward * moveDir.y + rigid.transform.right * moveDir.x; //ë°©í–¥ê°’ ë”í•˜ê¸°
+        velocity = velocity.normalized * speed;             //ì†ë ¥ = ë°©í–¥ * ì†ë„;
+    }   //íšŒì „ ì¸í’‹
 
     public void InputStopRotate(InputAction.CallbackContext context)
     {
@@ -234,39 +233,39 @@ public class Player : FSMAble, IDamageable
         velocity.z = 0.0f;
         if (isGround)
         {
-            velocity.y = 0.0f; //¶¥¿¡ ÀÖÀ» ¶§´Â y°ª 0À¸·Î
+            velocity.y = 0.0f; //ë•…ì— ìˆì„ ë•ŒëŠ” yê°’ 0ìœ¼ë¡œ
         }
         mFSM.ChangeState(FSMState.Idle);
-    }   //¿òÁ÷ÀÓ¹æÇâ ÃÊ±âÈ­
+    }   //ì›€ì§ì„ë°©í–¥ ì´ˆê¸°í™”
 
     /// <summary>
-    /// iSkillKey : ½ºÅ³ Å°°ª
+    /// iSkillKey : ìŠ¤í‚¬ í‚¤ê°’
     /// </summary>
     public void InputSkill(int iSkillKey)
     {
-        //±âº» °ø°İÀ» ÇÏ°í ÀÖÁö ¾ÊÀ»¶§, ¶¥ À§¿¡ ÀÖÀ» ¶§ ¸®ÅÏ
+        //ê¸°ë³¸ ê³µê²©ì„ í•˜ê³  ìˆì§€ ì•Šì„ë•Œ, ë•… ìœ„ì— ìˆì„ ë•Œ ë¦¬í„´
         if (mbIsAttack || !isGround)
         {
             return;
         }
 
-        //½ºÅ³ »ç¿ë ÇßÀ» ¶§
+        //ìŠ¤í‚¬ ì‚¬ìš© í–ˆì„ ë•Œ
         for (int i = 0; i < mSkill.Count; ++i)
         {
-            //Å°°ªÀÌ ÀÏÄ¡ÇÑ ½ºÅ³ÀÌ ÀÖÀ» ¶§, ½ºÅ³ »ç¿ë ÇÒ ¼ö ÀÖÀ» ¶§
+            //í‚¤ê°’ì´ ì¼ì¹˜í•œ ìŠ¤í‚¬ì´ ìˆì„ ë•Œ, ìŠ¤í‚¬ ì‚¬ìš© í•  ìˆ˜ ìˆì„ ë•Œ
             if (iSkillKey == mSkill[i].SkillKey &&
                 mSkill[i].Play(mTransform.position, mTransform.forward))
             {
                 DataManager dataMgr = GameManager.Instance.GetDataMgr();
                 float fStopTime = 0.0f;
 
-                //¹Ğ¸® ½ºÅ³ Áö¿¬½Ã°£ Ãß°¡
+                //ë°€ë¦¬ ìŠ¤í‚¬ ì§€ì—°ì‹œê°„ ì¶”ê°€
                 switch (dataMgr.GetSkillData(iSkillKey).AttackType)
                 {
                     case EAttackType.Melee:
                         fStopTime =
                             dataMgr.GetSkillData(iSkillKey).StartTime +
-                            dataMgr.GetSkillData(iSkillKey).DurationCount * dataMgr.GetSkillData(iSkillKey).RepeatTime;    //±âº» ½ºÅ³ Áö¿¬½Ã°£
+                            dataMgr.GetSkillData(iSkillKey).DurationCount * dataMgr.GetSkillData(iSkillKey).RepeatTime;    //ê¸°ë³¸ ìŠ¤í‚¬ ì§€ì—°ì‹œê°„
                         break;
                     default:
                         fStopTime = dataMgr.GetSkillData(iSkillKey).StartTime;
@@ -275,103 +274,103 @@ public class Player : FSMAble, IDamageable
                 //Invoke("Gizemo", fStopTime);
 
                 mInputStopMoveCoroutine = StartCoroutine(InputStopMoveCoroutine(fStopTime));
-                StartCoroutine(mSkill[i].SkillCoroutine());    //ÄÚ·çÆ¾ ½ÇÇà
-                mAnim.Attack(mSkill[i].SkillKey);    //¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+                StartCoroutine(mSkill[i].SkillCoroutine());    //ì½”ë£¨í‹´ ì‹¤í–‰
+                mAnim.Attack(mSkill[i].SkillKey);    //ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
             }
         }
-    }   //½ºÅ³ ÀÎÇ²
+    }   //ìŠ¤í‚¬ ì¸í’‹
 
     public void InputJump(InputAction.CallbackContext context)
     {
-        //¶¥À» ¹â°í ÀÖÀ» ¶§ Á¡ÇÁ »ç¿ë °¡´É
+        //ë•…ì„ ë°Ÿê³  ìˆì„ ë•Œ ì í”„ ì‚¬ìš© ê°€ëŠ¥
         if (!isGround)
         {
             return;
         }
-        rigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);    //¼ø°£ÀûÀÎ Èû Àû¿ë
+        rigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);    //ìˆœê°„ì ì¸ í˜ ì ìš©
         PlayOneShot("PlayerJump");
-    }   //Á¡ÇÁ ÀÎÇ²
+    }   //ì í”„ ì¸í’‹
 
     public void InputInteraction(InputAction.CallbackContext context)
     {
         if (mInteractOBJ.Count > 0)
         {
             IInteractAble interaction = mInteractOBJ[0];
-            //Á¦°Å ÇØ¾ß ÇÒ Å¸ÀÔ ÀÏ ¶§
+            //ì œê±° í•´ì•¼ í•  íƒ€ì… ì¼ ë•Œ
             if (mInteractOBJ[0] is DropItem || mInteractOBJ[0] is SceneTeleport)
             {
                 mInteractOBJ.RemoveAt(0);
             }
 
-            interaction.Interaction();  //»óÈ£ÀÛ¿ë
+            interaction.Interaction();  //ìƒí˜¸ì‘ìš©
 
-            //»óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ®°¡ ¾ø´Ù¸é, NPC ÀÏ ¶§
-            //»óÈ£ÀÛ¿ë Ç¥½Ã ²ô±â
+            //ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ê°€ ì—†ë‹¤ë©´, NPC ì¼ ë•Œ
+            //ìƒí˜¸ì‘ìš© í‘œì‹œ ë„ê¸°
             if (mInteractOBJ.Count == 0 || mInteractOBJ[0] is NPC)
             {
-                (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(false);     //²ô±â
+                (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(false);     //ë„ê¸°
             }
         }
-    }   //»óÈ£ÀÛ¿ë ÀÎÇ²
+    }   //ìƒí˜¸ì‘ìš© ì¸í’‹
     #endregion
 
-    //ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ °è»ê
+    //í”Œë ˆì´ì–´ ì›€ì§ì„ ê³„ì‚°
     #region Update
     private void Move()
     {
         rigid.velocity = velocity;
-    }   //¿òÁ÷ÀÓ °è»ê
+    }   //ì›€ì§ì„ ê³„ì‚°
     private void Rotate()
     {
-        mfYaw += rotateDir.x * mMouseSensivity.x * Time.deltaTime;     //¸¶¿ì½º °¨µµ °ª¸¸Å­ È¸Àü
+        mfYaw += rotateDir.x * mMouseSensivity.x * Time.deltaTime;     //ë§ˆìš°ìŠ¤ ê°ë„ ê°’ë§Œí¼ íšŒì „
         mfPitch += rotateDir.y * mMouseSensivity.y * Time.deltaTime;
 
-        mfYaw = ClampDgree(mfYaw, -360, 360);     //360 ~ -360È¸Àü°ª ¹üÀ§ ¾ÈÀ¸·Î °ª Áõ°¨
-        mfPitch = Mathf.Clamp(mfPitch, -90, 80);     //-90 80µµ °ª °íÁ¤
+        mfYaw = ClampDgree(mfYaw, -360, 360);     //360 ~ -360íšŒì „ê°’ ë²”ìœ„ ì•ˆìœ¼ë¡œ ê°’ ì¦ê°
+        mfPitch = Mathf.Clamp(mfPitch, -90, 80);     //-90 80ë„ ê°’ ê³ ì •
 
-        mTransform.rotation = Quaternion.Euler(0.0f, mfYaw, 0.0f);     //ÇÃ·¹ÀÌ¾î Yaw È¸Àü
-        geometry.SetRotate(mfPitch, mfYaw);     //Ä«¸Ş¶ó Å¸°ÙÀÇ Áö¿À¸ŞÆ®¸® È¸Àü
-    }   //È¸Àü °è»ê
+        mTransform.rotation = Quaternion.Euler(0.0f, mfYaw, 0.0f);     //í”Œë ˆì´ì–´ Yaw íšŒì „
+        geometry.SetRotate(mfPitch, mfYaw);     //ì¹´ë©”ë¼ íƒ€ê²Ÿì˜ ì§€ì˜¤ë©”íŠ¸ë¦¬ íšŒì „
+    }   //íšŒì „ ê³„ì‚°
     private void Gravity()
     {
         RaycastHit hit;
-        // SphereCast·Î ¶¥ È®ÀÎ
+        // SphereCastë¡œ ë•… í™•ì¸
         if (Physics.Raycast(mTransform.position + Vector3.up * 0.3f, Vector3.down, out hit, 0.4f, miGroundLayerMask))
         {
-            velocity.y = 0.0f;    //¶¥ÀÏ ¶§ yÃà ¼Óµµ 0 ¼³Á¤
+            velocity.y = 0.0f;    //ë•…ì¼ ë•Œ yì¶• ì†ë„ 0 ì„¤ì •
             isGround = true;
             return;
         }
 
-        // ¶¥¿¡ ´êÁö ¾Ê¾ÒÀ» °æ¿ì Áß·Â Àû¿ë
+        // ë•…ì— ë‹¿ì§€ ì•Šì•˜ì„ ê²½ìš° ì¤‘ë ¥ ì ìš©
         rigid.velocity += Vector3.down * mfGravity * mfDownForce * Time.deltaTime;
         isGround = false;
 
-    }//Áß·Â Àû¿ë
+    }//ì¤‘ë ¥ ì ìš©
     private void Slope()
     {
-        //¼öÆò ÀÌ ¾Æ´Ò ¶§ && ¿À¸£¸·±âÁØ °¢µµ 45µµ ¾Æ´Ò ¶§
+        //ìˆ˜í‰ ì´ ì•„ë‹ ë•Œ && ì˜¤ë¥´ë§‰ê¸°ì¤€ ê°ë„ 45ë„ ì•„ë‹ ë•Œ
         if (Physics.Raycast(mTransform.position + velocity.normalized * 0.3f, Vector3.down, out slopeHit, 0.3f, miGroundLayerMask) &&
             slopeHit.normal != Vector3.up &&
             Vector3.Angle(Vector3.up, slopeHit.normal) < mfSlopeAngle)
         {
-            velocity = Vector3.ProjectOnPlane(velocity, slopeHit.normal);   //Åõ¿µ ¹éÅÍ·Î ÀÌµ¿
+            velocity = Vector3.ProjectOnPlane(velocity, slopeHit.normal);   //íˆ¬ì˜ ë°±í„°ë¡œ ì´ë™
         }
-    }   //±¼°îÁø ¶¥ Ã³¸®
+    }   //êµ´ê³¡ì§„ ë•… ì²˜ë¦¬
     #endregion
 
-    //FSMable Override ÇÔ¼öµé
+    //FSMable Override í•¨ìˆ˜ë“¤
     #region FSMstate
     public override void IdleStateEnter()
     {
-        mAnim.Stop();                //¿¡´Ï¸ŞÀÌ¼Ç ¸ØÃã ¼³Á¤
+        mAnim.Stop();                //ì—ë‹ˆë©”ì´ì…˜ ë©ˆì¶¤ ì„¤ì •
     }
-    public override void IdleState() { }     //¾ÆÀÌµé »óÅÂ µ¿ÀÛ
+    public override void IdleState() { }     //ì•„ì´ë“¤ ìƒíƒœ ë™ì‘
     public override void DamagedStateEnter()
     {
-        PlayOneShot("PlayerDamaged");    //µ¥¹ÌÁö »ç¿îµå
+        PlayOneShot("PlayerDamaged");    //ë°ë¯¸ì§€ ì‚¬ìš´ë“œ
 
-        //°ø°İ ¸ØÃã»óÅÂ ÀÏ ¶§¸¸
+        //ê³µê²© ë©ˆì¶¤ìƒíƒœ ì¼ ë•Œë§Œ
         if (mInputStopMoveCoroutine != null || mAttackCoroutine != null)
         {
             return;
@@ -379,7 +378,7 @@ public class Player : FSMAble, IDamageable
 
         mInputStopMoveCoroutine = StartCoroutine(InputStopMoveCoroutine(1.0f));
         mAnim.Damaged();
-        //¿¡´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        //ì—ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
     }
     public override void DamagedState()
     {
@@ -389,39 +388,39 @@ public class Player : FSMAble, IDamageable
     }
     public override void DeadStateEnter()
     {
-        GameManager.Instance.GetInputMgr.SetActionMap(EActionMap.NoInput);      //ÀÎÇ² ¸·±â
+        GameManager.Instance.GetInputMgr.SetActionMap(EActionMap.NoInput);      //ì¸í’‹ ë§‰ê¸°
         mAnim.Dead();
-        PlayOneShot("PlayerDead");    //»ç¸Á »ç¿îµå
-        //ºÎÈ°ÆĞ³Î ¿­±â
+        PlayOneShot("PlayerDead");    //ì‚¬ë§ ì‚¬ìš´ë“œ
+        //ë¶€í™œíŒ¨ë„ ì—´ê¸°
         (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).RevivalPlayer.SetActive(true);
 
-    }       //»ç¸Á »óÅÂ µ¿ÀÛ
+    }       //ì‚¬ë§ ìƒíƒœ ë™ì‘
     public override void MoveEnter()
     {
         StopLoop();
-        PlayLoop("PlayerWalk");    //¿òÁ÷ÀÌ±â »ç¿îµå
+        PlayLoop("PlayerWalk");    //ì›€ì§ì´ê¸° ì‚¬ìš´ë“œ
     }
     public override void MoveState()
     {
         mAnim.Move(moveDir.x, moveDir.y);
-    }       //¿òÁ÷ÀÓ »óÅÂ µ¿ÀÛ
+    }       //ì›€ì§ì„ ìƒíƒœ ë™ì‘
     public override void MoveExit()
     {
         StopLoop();
     }
     public override void AttackEnter()
     {
-        velocity = Vector3.zero;    //¼Ó·Â 0À¸·Î ¼³Á¤
-        mbIsAttack = true;     //°ø°İ»óÅÂ ÀüÈ¯
-        //±âº»°ø°İ ½ÃÀÛ
+        velocity = Vector3.zero;    //ì†ë ¥ 0ìœ¼ë¡œ ì„¤ì •
+        mbIsAttack = true;     //ê³µê²©ìƒíƒœ ì „í™˜
+        //ê¸°ë³¸ê³µê²© ì‹œì‘
         if (mAttackCoroutine == null)
         {
             mAttackCoroutine = StartCoroutine(AttackCoroutine());
         }
-    }   //°ø°İ »óÅÂ ÁøÀÔ ½Ã
+    }   //ê³µê²© ìƒíƒœ ì§„ì… ì‹œ
     public override void AttackState()
     {
-    }     //°ø°İ »óÅÂ µ¿ÀÛ
+    }     //ê³µê²© ìƒíƒœ ë™ì‘
     public override void AttackExit()
     {
         if (mAttackCoroutine != null)
@@ -430,24 +429,24 @@ public class Player : FSMAble, IDamageable
         }
         mbIsAttack = false;
         mAttackCoroutine = null;
-    }       //°ø°İ »óÅÂ Å»Ãâ ½Ã
+    }       //ê³µê²© ìƒíƒœ íƒˆì¶œ ì‹œ
     public override void ReturnStateEnter() { }
     public override void ReturnState() { }
     public override void ReturnExit() { }
 
     #endregion
 
-    //¿¬»ê ÇÔ¼ö
+    //ì—°ì‚° í•¨ìˆ˜
     #region CarculateMath
     /// <summary>
-    /// dir : ¹æÇâ°ª
+    /// dir : ë°©í–¥ê°’
     /// </summary>
     private float ClampDir(float dir)
     {
-        if (dir > maxRotateDir) return maxRotateDir;            //0º¸´Ù Å¬¶§
-        else if (dir < -maxRotateDir) return -maxRotateDir;     //0º¸´Ù ÀÛÀ»¶§
+        if (dir > maxRotateDir) return maxRotateDir;            //0ë³´ë‹¤ í´ë•Œ
+        else if (dir < -maxRotateDir) return -maxRotateDir;     //0ë³´ë‹¤ ì‘ì„ë•Œ
         return dir;
-    }   //¹æÇâ °ªÀ» ¹ŞÀ¸¸é 1, -1, 0 °ªÀ¸·Î ¸®ÅÏ
+    }   //ë°©í–¥ ê°’ì„ ë°›ìœ¼ë©´ 1, -1, 0 ê°’ìœ¼ë¡œ ë¦¬í„´
 
     private float ClampDgree(float value, float min, float max)
     {
@@ -467,41 +466,41 @@ public class Player : FSMAble, IDamageable
     #region Sound
     private void PlayOneShot(string strKey)
     {
-        mPlayerSFX.PlayOneShot(SoundManager.Instance.AudioData(strKey));    //»ç¿îµå ÇÑ¹ø Àç»ı
-    }   //»ç¿îµå ÇÑ¹ø Àç»ı
+        mPlayerSFX.PlayOneShot(SoundManager.Instance.AudioData(strKey));    //ì‚¬ìš´ë“œ í•œë²ˆ ì¬ìƒ
+    }   //ì‚¬ìš´ë“œ í•œë²ˆ ì¬ìƒ
 
     private void PlayLoop(string strKey)
     {
         mPlayerSFX.clip = SoundManager.Instance.AudioData(strKey);
         mPlayerSFX.loop = true;
         mPlayerSFX.Play();
-    }   //·çÇÁ »ç¿îµå Àç»ı
+    }   //ë£¨í”„ ì‚¬ìš´ë“œ ì¬ìƒ
 
     private void StopLoop()
     {
         mPlayerSFX.clip = null;
         mPlayerSFX.loop = false;
         mPlayerSFX.Stop();
-    }   //·çÇÁ »ç¿îµå ¸ØÃã ¼³Á¤
+    }   //ë£¨í”„ ì‚¬ìš´ë“œ ë©ˆì¶¤ ì„¤ì •
     #endregion
 
     /// <summary>
-    /// iDamage : µ¥¹ÌÁö
-    /// dir : ¸ÂÀº ¹æÇâ
+    /// iDamage : ë°ë¯¸ì§€
+    /// dir : ë§ì€ ë°©í–¥
     /// </summary>
     public void Damaged(int iDamage, Vector3 dir)
     {
-        //»ç¸Á ½Ã ¸®ÅÏ
+        //ì‚¬ë§ ì‹œ ë¦¬í„´
         if (mbIsDie)
         {
             return;
         }
 
-        //Èı ÆÄÆ¼Å¬
-        Vector3 hitPos = mTransform.position - (dir * 2.0f);    //¾Õ¿¡¼­ Ç¥½ÃÇÒ À§Ä¡ = ÇÃ·¹ÀÌ¾î À§Ä¡ - ¸ÂÀº¹æÇâ * 2.0f
-        float randomDist = Random.Range(-0.2f, 0.2f);    //·£´ıÇÑ Ãß°¡ÇÒ ±æÀÌ
-        hitPos.y += randomDist;    //·£´ı ³ôÀÌ
-        hitPos.x += randomDist;    //·£´ı °¡·Î
+        //í› íŒŒí‹°í´
+        Vector3 hitPos = mTransform.position - (dir * 2.0f);    //ì•ì—ì„œ í‘œì‹œí•  ìœ„ì¹˜ = í”Œë ˆì´ì–´ ìœ„ì¹˜ - ë§ì€ë°©í–¥ * 2.0f
+        float randomDist = Random.Range(-0.2f, 0.2f);    //ëœë¤í•œ ì¶”ê°€í•  ê¸¸ì´
+        hitPos.y += randomDist;    //ëœë¤ ë†’ì´
+        hitPos.x += randomDist;    //ëœë¤ ê°€ë¡œ
         Particle hitParticle = GameManager.Instance.GetObjPoolManager().GetObject(4002) as Particle;
         hitParticle.Active(hitPos + mHeight, mTransform.forward);
 
@@ -509,28 +508,28 @@ public class Player : FSMAble, IDamageable
         if (mStat.Damaged(iDamage))
         {
             mbIsDie = true;
-            //»ç¸Á ½Ã Ã³¸®
-            mFSM.ChangeState(FSMState.Dead);    //¿¡´Ï¸ŞÀÌ¼Ç »ç¸Á Ã³¸®
+            //ì‚¬ë§ ì‹œ ì²˜ë¦¬
+            mFSM.ChangeState(FSMState.Dead);    //ì—ë‹ˆë©”ì´ì…˜ ì‚¬ë§ ì²˜ë¦¬
         }
 
         mFSM.ChangeState(FSMState.Damaged);
 
         PlayerPanel playerPanel = UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel;
         playerPanel.SliderAnim(EPlayerSlider.HP, (float)mStat.HP);
-    }   //µ¥¹ÌÁö ÀÔÀ»¶§ Ã³¸®
+    }   //ë°ë¯¸ì§€ ì…ì„ë•Œ ì²˜ë¦¬
 
-    //Æ®¸®°Å ÇÔ¼ö
+    //íŠ¸ë¦¬ê±° í•¨ìˆ˜
     #region Trigger
     public void OnTriggerEnter(Collider other)
     {
-        //»óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ® ÀÏ ¶§
+        //ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ ì¼ ë•Œ
         if (other.tag == "InteractAble")
         {
-            IInteractAble interactOBJ = other.GetComponent<IInteractAble>();    //ÄÄÆ÷³ÍÆ® ¹Ş±â
-            //¸®½ºÆ®¿¡ Æ÷ÇÔµÇ¾î ÀÖÁö ¾Ê´Ù¸é
+            IInteractAble interactOBJ = other.GetComponent<IInteractAble>();    //ì»´í¬ë„ŒíŠ¸ ë°›ê¸°
+            //ë¦¬ìŠ¤íŠ¸ì— í¬í•¨ë˜ì–´ ìˆì§€ ì•Šë‹¤ë©´
             if (!mInteractOBJ.Contains(interactOBJ))
             {
-                mInteractOBJ.Add(interactOBJ);      //»ğÀÔ
+                mInteractOBJ.Add(interactOBJ);      //ì‚½ì…
                 (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(true);
             }
         }
@@ -538,33 +537,33 @@ public class Player : FSMAble, IDamageable
 
     public void OnTriggerExit(Collider other)
     {
-        //»óÈ£ÀÛ¿ë ¿ÀºêÁ§Æ®ÀÏ¶§
+        //ìƒí˜¸ì‘ìš© ì˜¤ë¸Œì íŠ¸ì¼ë•Œ
         if (other.tag == "InteractAble")
         {
-            IInteractAble interactOBJ = other.GetComponent<IInteractAble>();    //ÄÄÆ÷³ÍÆ® ¹Ş±â
-            //¸®½ºÆ®¿¡ Æ÷ÇÔÇÏ°í ÀÖÀ¸¸é
+            IInteractAble interactOBJ = other.GetComponent<IInteractAble>();    //ì»´í¬ë„ŒíŠ¸ ë°›ê¸°
+            //ë¦¬ìŠ¤íŠ¸ì— í¬í•¨í•˜ê³  ìˆìœ¼ë©´
             if (mInteractOBJ.Contains(interactOBJ))
             {
-                mInteractOBJ.Remove(interactOBJ);      //Á¦°Å
+                mInteractOBJ.Remove(interactOBJ);      //ì œê±°
             }
 
-            //»óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ®°¡ ¾øÀ» ¶§
+            //ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ê°€ ì—†ì„ ë•Œ
             if (mInteractOBJ.Count == 0)
             {
-                (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(false);     //²ô±â
+                (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(false);     //ë„ê¸°
             }
         }
     }
     #endregion
 
-    //ÇÃ·¹ÀÌ¾î ¼³Á¤
+    //í”Œë ˆì´ì–´ ì„¤ì •
     #region SetPlayer
     public void SetMove(Vector3 position, float yaw)
     {
         mfYaw = yaw;
         mfPitch = -30.0f;
         mTransform.position = position;
-    }   //ÇÃ·¹ÀÌ¾î ÁÂÇ¥ ÀÌµ¿, ¹Ù¶óº¸±â
+    }   //í”Œë ˆì´ì–´ ì¢Œí‘œ ì´ë™, ë°”ë¼ë³´ê¸°
 
     public void SetLookAt(Vector3 pos)
     {
@@ -573,11 +572,11 @@ public class Player : FSMAble, IDamageable
         Quaternion rot = Quaternion.LookRotation(dir);
         Vector3 rotate = rot.eulerAngles;
         mfYaw = rotate.y;
-    }   //ÇÃ·¹ÀÌ¾î ¹æÇâ ¹Ù¶óº¸±â
+    }   //í”Œë ˆì´ì–´ ë°©í–¥ ë°”ë¼ë³´ê¸°
 
     public void SetAxisYInverse(bool bAxisYInverseStatu)
     {
-        //¿ª¹æÇâ 1, Á¤¹æÇâ -1
+        //ì—­ë°©í–¥ 1, ì •ë°©í–¥ -1
         if (bAxisYInverseStatu)
         {
             mfRotateYDir = 1;
@@ -586,58 +585,58 @@ public class Player : FSMAble, IDamageable
         {
             mfRotateYDir = -1;
         }
-    }   //YÃà ¹İÀü ¼³Á¤
+    }   //Yì¶• ë°˜ì „ ì„¤ì •
 
     public void SetMouseSencivity(float fSensivityX, float fSensivityY)
     {
         mMouseSensivity.x = fSensivityX;
         mMouseSensivity.y = fSensivityY;
-    }   //¸¶¿ì½º ¹Î°¨µµ ¼³Á¤
+    }   //ë§ˆìš°ìŠ¤ ë¯¼ê°ë„ ì„¤ì •
 
     /// <summary>
-    /// eStat : ½ºÅİÀÇ Á¾·ù
-    /// iStat : ´õÇÒ ½ºÅİ °ª
+    /// eStat : ìŠ¤í…Ÿì˜ ì¢…ë¥˜
+    /// iStat : ë”í•  ìŠ¤í…Ÿ ê°’
     /// </summary>
     public void AddStat(EStatDataType eStat, int iStat)
     {
         mStat.Add(eStat, iStat);
-    }   //ÇÃ·¹ÀÌ¾î ½ºÅİ Áõ°¡
+    }   //í”Œë ˆì´ì–´ ìŠ¤í…Ÿ ì¦ê°€
 
     /// <summary>
-    /// eStat : ½ºÅİÀÇ Á¾·ù
-    /// iStat : »¬ ½ºÅİ °ª
+    /// eStat : ìŠ¤í…Ÿì˜ ì¢…ë¥˜
+    /// iStat : ëº„ ìŠ¤í…Ÿ ê°’
     /// </summary>
     public bool SumStat(EStatDataType eType, int iStat)
     {
         return mStat.Sum(eType, iStat);
-    }   //ÇÃ·¹ÀÌ¾î ½ºÅİ °¨¼Ò
+    }   //í”Œë ˆì´ì–´ ìŠ¤í…Ÿ ê°ì†Œ
 
     /// <summary>
-    /// iSkillKey : ½ºÅ³ Å°°ª
-    /// iSkillLevel : Àû¿ëÇÒ ½ºÅ³ ·¹º§
+    /// iSkillKey : ìŠ¤í‚¬ í‚¤ê°’
+    /// iSkillLevel : ì ìš©í•  ìŠ¤í‚¬ ë ˆë²¨
     /// </summary>
     public void SetSkillPower(int iSkillKey, int iSkillLevel)
     {
         for (int i = 0; i < mSkill.Count; ++i)
         {
-            //½ºÅ³ Å°°¡ °°À¸¸é ÆÄ¿ö Áõ°¡
+            //ìŠ¤í‚¬ í‚¤ê°€ ê°™ìœ¼ë©´ íŒŒì›Œ ì¦ê°€
             if (mSkill[i].SkillKey == iSkillKey)
             {
                 mSkill[i].SetSkillPower(iSkillLevel);
                 break;
             }
         }
-    }   //½ºÅ³ÆÄ¿ö Áõ°¡
+    }   //ìŠ¤í‚¬íŒŒì›Œ ì¦ê°€
 
     /// <summary>
-    /// iSkillKey : ½ºÅ³ Å°°ª
-    /// quickSlot : Äü½½·Ô
+    /// iSkillKey : ìŠ¤í‚¬ í‚¤ê°’
+    /// quickSlot : í€µìŠ¬ë¡¯
     /// </summary>
     public void SetTargetQuickSlot(int iSkillKey, QuickSlot quickSlot)
     {
         for (int i = 0; i < mSkill.Count; ++i)
         {
-            //½ºÅ³ Å°°¡ °°´Ù¸é Äü½½·Ô µî·Ï
+            //ìŠ¤í‚¬ í‚¤ê°€ ê°™ë‹¤ë©´ í€µìŠ¬ë¡¯ ë“±ë¡
             if (mSkill[i].SkillKey == iSkillKey)
             {
                 if (quickSlot == null)
@@ -650,27 +649,27 @@ public class Player : FSMAble, IDamageable
                 }
             }
         }
-    }   //Äü½½·Ô ¼³Á¤
+    }   //í€µìŠ¬ë¡¯ ì„¤ì •
     #endregion
 
     public void LoadData(SaveData saveData)
     {
-        mInteractOBJ.Clear();   //»óÈ£ÀÛ¿ë ÃÊ±âÈ­
+        mInteractOBJ.Clear();   //ìƒí˜¸ì‘ìš© ì´ˆê¸°í™”
         (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(false);
-        mStat.ResetData(miPlayerKey);   //½ºÅİ¸®¼Â
-        mStat.LoadData(saveData);     //µ¥ÀÌÅÍ ºÒ·¯¿À±â
-    }   //ÇÃ·¹ÀÌ¾î µ¥ÀÌÅÍ ·Îµå
+        mStat.ResetData(miPlayerKey);   //ìŠ¤í…Ÿë¦¬ì…‹
+        mStat.LoadData(saveData);     //ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
+    }   //í”Œë ˆì´ì–´ ë°ì´í„° ë¡œë“œ
 
     private IEnumerator AttackCoroutine()
     {
         while (true)
         {
-            //°ø°İ Àç»ı
+            //ê³µê²© ì¬ìƒ
             if (mAttack.Play(mTransform.position, mTransform.forward))
             {
-                StartCoroutine(mAttack.SkillCoroutine());       //ÄÚ·çÆ¾
-                mAnim.Attack(mAttack.SkillKey);     //°ø°İ
-                PlayOneShot("SwordAttack");     //»ç¿îµå Àç»ı
+                StartCoroutine(mAttack.SkillCoroutine());       //ì½”ë£¨í‹´
+                mAnim.Attack(mAttack.SkillKey);     //ê³µê²©
+                PlayOneShot("SwordAttack");     //ì‚¬ìš´ë“œ ì¬ìƒ
             }
             yield return new WaitForSeconds(1.0f);
         }
@@ -678,28 +677,28 @@ public class Player : FSMAble, IDamageable
 
     private IEnumerator InputStopMoveCoroutine(float fTime)
     {
-        mbIsAttack = true;    //°ø°İ»óÅÂ ÀüÈ¯
-        velocity = Vector3.zero;    //¼Ó·Â 0À¸·Î ¼³Á¤
-        yield return new WaitForSeconds(fTime);     //½Ã°£Áö¿¬
-        mbIsAttack = false;     //°ø°İ»óÅÂ ÇØÁ¦
+        mbIsAttack = true;    //ê³µê²©ìƒíƒœ ì „í™˜
+        velocity = Vector3.zero;    //ì†ë ¥ 0ìœ¼ë¡œ ì„¤ì •
+        yield return new WaitForSeconds(fTime);     //ì‹œê°„ì§€ì—°
+        mbIsAttack = false;     //ê³µê²©ìƒíƒœ í•´ì œ
 
         mInputStopMoveCoroutine = null;
-    }   //fTime ¸¸Å­ ÇÃ·¹ÀÌ¾î ¹«ºê ÀÎÇ² ¸ØÃß±â
+    }   //fTime ë§Œí¼ í”Œë ˆì´ì–´ ë¬´ë¸Œ ì¸í’‹ ë©ˆì¶”ê¸°
 
     public void ResetPlayer()
     {
-        mInteractOBJ.Clear();   //»óÈ£ÀÛ¿ë ºñ¿ì±â
-        (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(false);   //»óÈ£ÀÛ¿ë Ç¥½Ã ²ô±â
+        mInteractOBJ.Clear();   //ìƒí˜¸ì‘ìš© ë¹„ìš°ê¸°
+        (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(false);   //ìƒí˜¸ì‘ìš© í‘œì‹œ ë„ê¸°
 
         if (mAttackCoroutine != null)
         {
-            StopCoroutine(mAttackCoroutine);    //°ø°İ
+            StopCoroutine(mAttackCoroutine);    //ê³µê²©
             mAttackCoroutine = null;
         }
 
         if (mInputStopMoveCoroutine != null)
         {
-            StopCoroutine(mInputStopMoveCoroutine);     //Áö¿¬½Ã°£
+            StopCoroutine(mInputStopMoveCoroutine);     //ì§€ì—°ì‹œê°„
             mInputStopMoveCoroutine = null;
         }
 
@@ -711,16 +710,16 @@ public class Player : FSMAble, IDamageable
         isGround = true;
         mbIsAttack = false;
 
-    }   //ÇÃ·¹ÀÌ¾î µ¥ÀÌÅÍ ¸®¼Â
+    }   //í”Œë ˆì´ì–´ ë°ì´í„° ë¦¬ì…‹
 
     public void RevivalPlayer()
     {
-        ResetPlayer();    //¸®¼Â
+        ResetPlayer();    //ë¦¬ì…‹
         mFSM.ChangeState(FSMState.Idle);    //Idle
-        //Ã¼·Â
+        //ì²´ë ¥
         AddStat(EStatDataType.HP, mStat.MaxHP);
         AddStat(EStatDataType.MP, mStat.MaxMP);
         mAnim.Reset();
         mbIsDie = false;
-    }   //ÇÃ·¹ÀÌ¾î ºÎÈ° ½Ã
+    }   //í”Œë ˆì´ì–´ ë¶€í™œ ì‹œ
 }
