@@ -12,9 +12,11 @@ public class Player : FSMAble, IDamageable
 
     [Header("Slope")]
     private RaycastHit slopeHit;
-
+    
     private readonly float mfSlopeAngle = 45.0f;
     private readonly int miGroundLayerMask = (1 << 8); //레이어 마스크
+
+    private GameObject mPlayerObject;   //플레이어 오브젝트
 
     [Header("CameraGeometry")]
     [SerializeField] private Geometry geometry;     //카메라 타겟 지오메트리
@@ -68,16 +70,92 @@ public class Player : FSMAble, IDamageable
 
     public int PlayerKey => miPlayerKey;    //플레이어 키값
 
-    public Vector3 GetPos
-    {
-        get { return rigid.position; }
+    public Vector3 GetPos 
+    { 
+        get { return rigid.position; } 
     }    //플레이어 위치
 
     public PlayerStat PlayerStat => mStat;      //플레이어 스텟
 
     public bool IsInteraction => mInteractOBJ.Count > 0;    //상호작용
 
-    public void SetActive(bool bActiveStatu) => this.gameObject.SetActive(bActiveStatu);
+    public void SetActive(bool bActiveStatu) => mPlayerObject.SetActive(bActiveStatu);
+    #region DrawGizmo
+    //참조
+    //https://nicotina04.tistory.com/198
+    //https://velog.io/@hhj3258/%EA%B2%8C%EC%9E%84%EC%88%98%ED%95%99Unity-%EB%B6%80%EC%B1%84%EA%BC%B4-%EC%95%88%EC%9D%98-%EC%A0%81-%ED%8C%90%EB%B3%84
+    //https://dyunace.tistory.com/24
+    /*
+    Gizmos private void OnDrawGizmos()
+    {
+        Handles.color = Color.red;
+        Handles.DrawSolidArc(mTransform.position, Vector3.up, mTransform.forward, mfGizmoAngle, mfGizmoRadius);
+        Handles.DrawSolidArc(mTransform.position, Vector3.up, mTransform.forward, -mfGizmoAngle, mfGizmoRadius);
+
+        if (mbGizmoDraw)
+        {
+            mbGizmoDraw = false;
+            //DrawSolidArc(시작점, 노멀벡터(법선벡터), 그려줄 방향 벡터, 각도, 반지름)
+
+            //부체꼴 그리기
+            Vector3 position = mTransform.position;
+            forwardGizmo = mTransform.forward;
+            Vector3 prevLeftPosition = forwardGizmo;
+            Vector3 prevRightPosition = forwardGizmo;
+            //360도 아닌 경우 반지름 표시
+            if (mfGizmoAngle < 180)
+            {
+                prevLeftPosition = RotateVector2D(forwardGizmo, -mfGizmoAngle).normalized * GizmoDist;
+                prevRightPosition = RotateVector2D(forwardGizmo, mfGizmoAngle).normalized * GizmoDist;
+                Debug.DrawLine(position, position + prevLeftPosition, Color.red, 3.0f, false);
+                Debug.DrawLine(position, position + prevRightPosition, Color.red, 3.0f, false);
+            }
+
+            prevLeftPosition = forwardGizmo.normalized * GizmoDist;
+            prevRightPosition = prevLeftPosition;
+
+            int iRoop = (int)mfGizmoAngle / 5;
+
+            //양옆 호 표시
+            for (int i = 1; i <= iRoop; ++i)
+            {
+                Vector3 cosLeftPosition = RotateVector2D(prevLeftPosition, -5).normalized * GizmoDist;
+                Vector3 cosRightPosition = RotateVector2D(prevRightPosition, 5).normalized * GizmoDist;
+                Debug.DrawLine(position + prevLeftPosition, position + cosLeftPosition, Color.red, 3.0f, false);
+                Debug.DrawLine(position + prevRightPosition, position + cosRightPosition, Color.red, 3.0f, false);
+                prevLeftPosition = cosLeftPosition;
+                prevRightPosition = cosRightPosition;
+            }
+        }
+
+        if(mbGizmoDraw)
+        {
+            mbGizmoDraw = false;
+
+            Vector3 LeftStart = mTransform.position - mTransform.right * 0.5f;
+            Vector3 RightStart = mTransform.position + mTransform.right * 0.5f;
+            Vector3 LeftEnd = LeftStart + forwardGizmo;
+            Vector3 RightEnd = RightStart + forwardGizmo;
+            Debug.DrawLine(LeftStart, LeftEnd, Color.blue, 3.0f);
+            Debug.DrawLine(RightStart, RightEnd, Color.blue, 3.0f);
+
+            Debug.DrawLine(LeftStart, RightStart, Color.blue, 3.0f);
+            Debug.DrawLine(LeftEnd, RightEnd, Color.blue, 3.0f);
+        }
+    }
+
+    Vector3 RotateVector2D(Vector3 original, float angleDeg)
+    {
+        float rad = angleDeg * Mathf.Deg2Rad;
+        float cos = Mathf.Cos(rad);
+        float sin = Mathf.Sin(rad);
+
+        float newX = original.x * cos - original.z * sin;
+        float newZ = original.x * sin + original.z * cos;
+        return new Vector3(newX, original.y, newZ);
+    }
+    */
+    #endregion
 
     private void FixedUpdate()
     {
@@ -106,19 +184,20 @@ public class Player : FSMAble, IDamageable
         mAnim.SetAnim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
         mTransform = GetComponent<Transform>();
+        mPlayerObject = this.gameObject;
 
         //Data 값 초기화
         mbIsAttack = false;
         mbIsDie = false;
-        velocity = Vector2.zero;
-        moveDir = Vector2.zero;
+        velocity = Vector2.zero; 
+        moveDir = Vector2.zero; 
         rotateDir = Vector2.zero;
         mfPitch = mTransform.rotation.z;
         mfYaw = mTransform.rotation.y;
-        mMouseSensivity = new Vector2(100.0f, 100.0f);  //마우스 민감도
+        mMouseSensivity = new Vector2 (100.0f, 100.0f);  //마우스 민감도
         jumpForce = 10.0f;       //점프 힘
         speed = 5.0f;           //곱할 속도
-
+ 
         //플레이어 스텟
         if (mStat == null)
         {
@@ -127,7 +206,7 @@ public class Player : FSMAble, IDamageable
         mStat.Initialize(miPlayerKey);
 
         //사운드
-        if (mPlayerSFX == null)
+        if(mPlayerSFX == null)
         {
             mPlayerSFX = GetComponent<AudioSource>();
         }
@@ -147,14 +226,14 @@ public class Player : FSMAble, IDamageable
         }
 
         //플레이어 기본공격
-        if (mAttack == null)
+        if(mAttack == null)
         {
             mAttack = new Skill();
             mAttack.SetData(9, miTargetLayerMask, mStat, mTransform);
         }
 
         //상호작용 오브젝트
-        if (mInteractOBJ == null)
+        if(mInteractOBJ == null)
         {
             mInteractOBJ = new List<IInteractAble>();
         }
@@ -172,7 +251,7 @@ public class Player : FSMAble, IDamageable
     public void AttackStart(InputAction.CallbackContext context)
     {
         //땅 위에 있을 때 공격 진행 아닐때만
-        if (isGround && !mbIsAttack)
+        if (isGround && ! mbIsAttack)
         {
             mFSM.ChangeState(FSMState.Attack);
         }
@@ -185,23 +264,23 @@ public class Player : FSMAble, IDamageable
 
     public void InputMove(InputAction.CallbackContext context)
     {
-        if (mbIsAttack)
+        if(mbIsAttack)
         {
             velocity = Vector3.zero;
             return;
         }
 
         //땅에 있을때
-        if (isGround)
+        if (isGround) 
         {
             moveDir = context.ReadValue<Vector2>(); //움직이는 방향
             mFSM.ChangeState(FSMState.Move);
-        }
+        }                          
         else
         {
             moveDir = Vector2.zero;     //멈춰야 할 경우
         }
-
+       
         velocity = rigid.transform.forward * moveDir.y + rigid.transform.right * moveDir.x; //방향값 더하기
         velocity = velocity.normalized * speed;             //속력 = 방향 * 속도;
     }   //플레이어 움직임 인풋 처리
@@ -232,9 +311,9 @@ public class Player : FSMAble, IDamageable
         velocity.x = 0.0f;
         velocity.z = 0.0f;
         if (isGround)
-        {
+        { 
             velocity.y = 0.0f; //땅에 있을 때는 y값 0으로
-        }
+        }  
         mFSM.ChangeState(FSMState.Idle);
     }   //움직임방향 초기화
 
@@ -253,10 +332,18 @@ public class Player : FSMAble, IDamageable
         for (int i = 0; i < mSkill.Count; ++i)
         {
             //키값이 일치한 스킬이 있을 때, 스킬 사용 할 수 있을 때
-            if (iSkillKey == mSkill[i].SkillKey &&
+            if (iSkillKey == mSkill[i].SkillKey && 
                 mSkill[i].Play(mTransform.position, mTransform.forward))
             {
                 DataManager dataMgr = GameManager.Instance.GetDataMgr();
+
+                //forwardGizmo = mTransform.forward.normalized
+                //    * dataMgr.GetSkillData(iSkillKey).EndDist; //앞방향 길이
+
+                //mfGizmoAngle = dataMgr.GetSkillData(iSkillKey).Angle / 2;
+                //GizmoDist = dataMgr.GetSkillData(iSkillKey).EndDist;
+                //mbGizmoDraw = true;
+
                 float fStopTime = 0.0f;
 
                 //밀리 스킬 지연시간 추가
@@ -283,9 +370,9 @@ public class Player : FSMAble, IDamageable
     public void InputJump(InputAction.CallbackContext context)
     {
         //땅을 밟고 있을 때 점프 사용 가능
-        if (!isGround)
-        {
-            return;
+        if(!isGround) 
+        { 
+            return; 
         }
         rigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);    //순간적인 힘 적용
         PlayOneShot("PlayerJump");
@@ -293,7 +380,7 @@ public class Player : FSMAble, IDamageable
 
     public void InputInteraction(InputAction.CallbackContext context)
     {
-        if (mInteractOBJ.Count > 0)
+        if(mInteractOBJ.Count > 0)
         {
             IInteractAble interaction = mInteractOBJ[0];
             //제거 해야 할 타입 일 때
@@ -335,7 +422,7 @@ public class Player : FSMAble, IDamageable
     {
         RaycastHit hit;
         // SphereCast로 땅 확인
-        if (Physics.Raycast(mTransform.position + Vector3.up * 0.3f, Vector3.down, out hit, 0.4f, miGroundLayerMask))
+        if(Physics.Raycast(mTransform.position + Vector3.up * 0.3f, Vector3.down, out hit, 0.4f, miGroundLayerMask))
         {
             velocity.y = 0.0f;    //땅일 때 y축 속도 0 설정
             isGround = true;
@@ -365,7 +452,7 @@ public class Player : FSMAble, IDamageable
     {
         mAnim.Stop();                //에니메이션 멈춤 설정
     }
-    public override void IdleState() { }     //아이들 상태 동작
+    public override void IdleState() {}     //아이들 상태 동작
     public override void DamagedStateEnter()
     {
         PlayOneShot("PlayerDamaged");    //데미지 사운드
@@ -404,7 +491,7 @@ public class Player : FSMAble, IDamageable
     {
         mAnim.Move(moveDir.x, moveDir.y);
     }       //움직임 상태 동작
-    public override void MoveExit()
+    public override void MoveExit() 
     {
         StopLoop();
     }
@@ -430,14 +517,14 @@ public class Player : FSMAble, IDamageable
         mbIsAttack = false;
         mAttackCoroutine = null;
     }       //공격 상태 탈출 시
-    public override void ReturnStateEnter() { }
-    public override void ReturnState() { }
-    public override void ReturnExit() { }
+    public override void ReturnStateEnter() {}
+    public override void ReturnState() {}
+    public override void ReturnExit() {}
 
     #endregion
 
     //연산 함수
-    #region CarculateMath
+    #region Carculate
     /// <summary>
     /// dir : 방향값
     /// </summary>
@@ -450,12 +537,12 @@ public class Player : FSMAble, IDamageable
 
     private float ClampDgree(float value, float min, float max)
     {
-        while (value < min)
+        while(value < min)
         {
             value += 360.0f;
         }
 
-        while (value > max)
+        while(value > max)
         {
             value -= 360.0f;
         }
@@ -485,13 +572,103 @@ public class Player : FSMAble, IDamageable
     #endregion
 
     /// <summary>
+    /// eStat : 스텟의 종류
+    /// iStat : 더할 스텟 값
+    /// </summary>
+    public void AddStat(EStatDataType eStat, int iStat)
+    {
+        mStat.Add(eStat, iStat);
+    }   //플레이어 스텟 증가
+
+    /// <summary>
+    /// eStat : 스텟의 종류
+    /// iStat : 뺄 스텟 값
+    /// </summary>
+    public bool SumStat(EStatDataType eType, int iStat)
+    {
+        return mStat.Sum(eType, iStat);
+    }   //플레이어 스텟 감소
+
+    /// <summary>
+    /// iSkillKey : 스킬 키값
+    /// </summary>
+    public void SetSkillPower(int iSkillKey, int SkillLevel)
+    {
+        for(int i = 0; i < mSkill.Count; ++i)
+        {
+            //스킬 키가 같으면 파워 증가
+            if(mSkill[i].SkillKey == iSkillKey)
+            {
+                mSkill[i].SetSkillPower(SkillLevel);
+                break;
+            }
+        }
+    }   //스킬파워 증가
+    public void SetTargetQuickSlot(int iSkillKey, QuickSlot quickSlot)
+    {
+        for(int i = 0; i < mSkill.Count; ++i)
+        {
+            //스킬 키가 같다면 퀵슬롯 등록
+            if (mSkill[i].SkillKey == iSkillKey)
+            {
+                if(quickSlot == null)
+                {
+                    mSkill[i].ResetQuickSlot();
+                }
+                else
+                {
+                    mSkill[i].SetTargetQuickSlot(quickSlot);
+                }
+            }
+        }
+    }   //퀵슬롯 설정
+
+    //트리거 함수
+    #region Trigger
+    public void OnTriggerEnter(Collider other)
+    {
+        //상호작용 가능한 오브젝트 일 때
+        if(other.tag == "InteractAble")
+        {
+            IInteractAble interactOBJ = other.GetComponent<IInteractAble>();    //컴포넌트 받기
+            //리스트에 포함되어 있지 않다면
+            if(!mInteractOBJ.Contains(interactOBJ))
+            {
+                mInteractOBJ.Add(interactOBJ);      //삽입
+                (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(true);
+            }
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        //상호작용 오브젝트일때
+        if (other.tag == "InteractAble")
+        {
+            IInteractAble interactOBJ = other.GetComponent<IInteractAble>();    //컴포넌트 받기
+            //리스트에 포함하고 있으면
+            if (mInteractOBJ.Contains(interactOBJ))
+            {
+                mInteractOBJ.Remove(interactOBJ);      //제거
+            }
+
+            //상호작용 가능한 오브젝트가 없을 때
+            if(mInteractOBJ.Count == 0)
+            {
+                (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(false);     //끄기
+            }
+        }
+    }
+    #endregion
+
+    /// <summary>
     /// iDamage : 데미지
     /// dir : 맞은 방향
     /// </summary>
     public void Damaged(int iDamage, Vector3 dir)
     {
         //사망 시 리턴
-        if (mbIsDie)
+        if(mbIsDie)
         {
             return;
         }
@@ -518,46 +695,6 @@ public class Player : FSMAble, IDamageable
         playerPanel.SliderAnim(EPlayerSlider.HP, (float)mStat.HP);
     }   //데미지 입을때 처리
 
-    //트리거 함수
-    #region Trigger
-    public void OnTriggerEnter(Collider other)
-    {
-        //상호작용 가능한 오브젝트 일 때
-        if (other.tag == "InteractAble")
-        {
-            IInteractAble interactOBJ = other.GetComponent<IInteractAble>();    //컴포넌트 받기
-            //리스트에 포함되어 있지 않다면
-            if (!mInteractOBJ.Contains(interactOBJ))
-            {
-                mInteractOBJ.Add(interactOBJ);      //삽입
-                (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(true);
-            }
-        }
-    }
-
-    public void OnTriggerExit(Collider other)
-    {
-        //상호작용 오브젝트일때
-        if (other.tag == "InteractAble")
-        {
-            IInteractAble interactOBJ = other.GetComponent<IInteractAble>();    //컴포넌트 받기
-            //리스트에 포함하고 있으면
-            if (mInteractOBJ.Contains(interactOBJ))
-            {
-                mInteractOBJ.Remove(interactOBJ);      //제거
-            }
-
-            //상호작용 가능한 오브젝트가 없을 때
-            if (mInteractOBJ.Count == 0)
-            {
-                (UIManager.Instance.GetGUI(EGUI.Player) as PlayerPanel).InteractionUIObject.SetActive(false);     //끄기
-            }
-        }
-    }
-    #endregion
-
-    //플레이어 설정
-    #region SetPlayer
     public void SetMove(Vector3 position, float yaw)
     {
         mfYaw = yaw;
@@ -574,6 +711,7 @@ public class Player : FSMAble, IDamageable
         mfYaw = rotate.y;
     }   //플레이어 방향 바라보기
 
+    #region SettingPlayer
     public void SetAxisYInverse(bool bAxisYInverseStatu)
     {
         //역방향 1, 정방향 -1
@@ -592,66 +730,7 @@ public class Player : FSMAble, IDamageable
         mMouseSensivity.x = fSensivityX;
         mMouseSensivity.y = fSensivityY;
     }   //마우스 민감도 설정
-
-    /// <summary>
-    /// eStat : 스텟의 종류
-    /// iStat : 더할 스텟 값
-    /// </summary>
-    public void AddStat(EStatDataType eStat, int iStat)
-    {
-        mStat.Add(eStat, iStat);
-    }   //플레이어 스텟 증가
-
-    /// <summary>
-    /// eStat : 스텟의 종류
-    /// iStat : 뺄 스텟 값
-    /// </summary>
-    public bool SumStat(EStatDataType eType, int iStat)
-    {
-        return mStat.Sum(eType, iStat);
-    }   //플레이어 스텟 감소
-
-    /// <summary>
-    /// iSkillKey : 스킬 키값
-    /// iSkillLevel : 적용할 스킬 레벨
-    /// </summary>
-    public void SetSkillPower(int iSkillKey, int iSkillLevel)
-    {
-        for (int i = 0; i < mSkill.Count; ++i)
-        {
-            //스킬 키가 같으면 파워 증가
-            if (mSkill[i].SkillKey == iSkillKey)
-            {
-                mSkill[i].SetSkillPower(iSkillLevel);
-                break;
-            }
-        }
-    }   //스킬파워 증가
-
-    /// <summary>
-    /// iSkillKey : 스킬 키값
-    /// quickSlot : 퀵슬롯
-    /// </summary>
-    public void SetTargetQuickSlot(int iSkillKey, QuickSlot quickSlot)
-    {
-        for (int i = 0; i < mSkill.Count; ++i)
-        {
-            //스킬 키가 같다면 퀵슬롯 등록
-            if (mSkill[i].SkillKey == iSkillKey)
-            {
-                if (quickSlot == null)
-                {
-                    mSkill[i].ResetQuickSlot();
-                }
-                else
-                {
-                    mSkill[i].SetTargetQuickSlot(quickSlot);
-                }
-            }
-        }
-    }   //퀵슬롯 설정
     #endregion
-
     public void LoadData(SaveData saveData)
     {
         mInteractOBJ.Clear();   //상호작용 초기화
@@ -684,7 +763,7 @@ public class Player : FSMAble, IDamageable
 
         mInputStopMoveCoroutine = null;
     }   //fTime 만큼 플레이어 무브 인풋 멈추기
-
+    
     public void ResetPlayer()
     {
         mInteractOBJ.Clear();   //상호작용 비우기
@@ -702,14 +781,15 @@ public class Player : FSMAble, IDamageable
             mInputStopMoveCoroutine = null;
         }
 
-        for (int i = 0; i < mSkill.Count; ++i)
+        for(int i = 0; i < mSkill.Count; ++i)
         {
             mSkill[i].StopParticle();
         }
 
+
+        velocity = Vector3.zero;    //속력
         isGround = true;
         mbIsAttack = false;
-
     }   //플레이어 데이터 리셋
 
     public void RevivalPlayer()
