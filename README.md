@@ -45,10 +45,6 @@
   + Scene
      + TitleScene
        게임 처음 진입 시 게임시작, 종료, 세이브, 옵션설정 버튼
-     + VillageScene
-       게임 진행 시 사용
-     + BossRoomScene
-       보스 던전 진입 시 사용
   + Popup
      + 인벤토리창, 장비창, 스킬창, 퀘스트창, 상점창, 강화창, 퀵슬롯, 옵션창
      + 던전 결과창, 대화창, 미니 퀘스트 정보창, 상점 구매 개수 설정창, 부활창, 미니맵, SceneLoad창
@@ -103,8 +99,6 @@ https://youtu.be/iK_kFlgDOIk
   + Scene
      + TitleScene
        게임 처음 진입 시 게임시작, 종료, 세이브, 옵션설정
-     + Stage1, 2, 3
-       게임 입장시 
   + Popup
      + 인벤토리창, 퀘스트창, 상점창
      + 상점 구매 개수 설정창, 부활창, SceneLoad창
