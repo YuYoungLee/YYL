@@ -60,7 +60,7 @@ https://1drv.ms/p/c/114382788941cec0/EcDOQYl4gkMggBFgfgAAAAAB9vmMTDPrmot8Dz7-YLa
      + 피격 데미지, 퀘스트 진행 아이콘
 ---
 ## 5. 플레이 영상
-<img src="![Image](https://github.com/user-attachments/assets/5f55c68a-f9c1-44ea-98f9-ff27e1c99e9b)" width="250" height="250" />
+<img src="https://github.com/user-attachments/assets/5f55c68a-f9c1-44ea-98f9-ff27e1c99e9b" width="250" height="250" />
 
 
 https://youtu.be/iK_kFlgDOIk
