@@ -6,7 +6,7 @@ https://1drv.ms/p/c/114382788941cec0/EcDOQYl4gkMggBFgfgAAAAAB9vmMTDPrmot8Dz7-YLa
 
 ---
 ## 1. 소개
-![Image](https://github.com/user-attachments/assets/8e930527-33a6-47a8-b7ad-d4b4ac6b5257)
+![Image](https://github.com/user-attachments/assets/3b203862-fbc1-4840-b4a7-33e6ba4c962e)
 + 백 뷰 시점으로 진행하는 RPG게임이며 퀘스트를
 진행하고 몬스터를 처치하여 얻은 자원과 보상을 활용
 해 장비를 강화하여 성장하며 던전을 탐험할 수 있
@@ -71,7 +71,7 @@ https://drive.google.com/file/d/1qjDId2DzwVpTxgWT3p5FgunhiuWL0hJu/view?usp=shari
 # LastPage Portfolio
 ---
 ## 1. 소개
-![Image](https://github.com/user-attachments/assets/179be8dc-e348-4cce-9887-8f5f6152da25)
+![Image](https://github.com/user-attachments/assets/f2e94679-6759-48f5-95ad-7092d460d16b)
 백 뷰 시점으로 진행하는 로그라이크 게임이
 며 몬스터를 처치하거나 퀘스트를 클리어하여 성장하
 며 보스 몬스터를 잡아 다음 스테이지로 계속 이동하는
