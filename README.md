@@ -103,7 +103,7 @@ https://drive.google.com/file/d/1qjDId2DzwVpTxgWT3p5FgunhiuWL0hJu/view?usp=shari
       + 고블린
       + 거미
    + 보스 몬스터
-      + 드레곤 (패턴 : 스킬 2개)
+      + 드래곤 (패턴 : 스킬 2개)
    + NPC
       + 상점 NPC
       + 퀘스트 NPC
