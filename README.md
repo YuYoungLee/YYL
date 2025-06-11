@@ -6,7 +6,7 @@ https://1drv.ms/p/c/114382788941cec0/EcDOQYl4gkMggBFgfgAAAAAB9vmMTDPrmot8Dz7-YLa
 
 ---
 ## 1. 소개
-![Image](https://github.com/user-attachments/assets/3b203862-fbc1-4840-b4a7-33e6ba4c962e)
+![Image](https://github.com/user-attachments/assets/a97806c4-2ba8-4f20-8862-2f88eeb1417f)
 + 백 뷰 시점으로 진행하는 RPG게임이며 퀘스트를
 진행하고 몬스터를 처치하여 얻은 자원과 보상을 활용
 해 장비를 강화하여 성장하며 던전을 탐험할 수 있
