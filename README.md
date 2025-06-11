@@ -121,7 +121,7 @@ https://drive.google.com/file/d/1qjDId2DzwVpTxgWT3p5FgunhiuWL0hJu/view?usp=shari
      + 피격 데미지, 퀘스트 진행 아이콘
 ---
 ## 5. 플레이 영상
-<img src="https://github.com/user-attachments/assets/692bba87-e72f-4667-8612-16271e6713af)" width="250" height="250" />
+<img src=https://github.com/user-attachments/assets/692bba87-e72f-4667-8612-16271e6713af width="250" height="250" />
 
 https://youtu.be/goe68owyowc
 
