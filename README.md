@@ -62,8 +62,8 @@ https://1drv.ms/p/c/114382788941cec0/EcDOQYl4gkMggBFgfgAAAAAB9vmMTDPrmot8Dz7-YLa
 ## 5. 플레이 영상
 <img src="https://github.com/user-attachments/assets/5f55c68a-f9c1-44ea-98f9-ff27e1c99e9b" width="250" height="250" />
 
-
 https://youtu.be/iK_kFlgDOIk
+
 ---
 ## 6. 다운로드 링크
 https://drive.google.com/file/d/1qjDId2DzwVpTxgWT3p5FgunhiuWL0hJu/view?usp=sharing
@@ -121,8 +121,10 @@ https://drive.google.com/file/d/1qjDId2DzwVpTxgWT3p5FgunhiuWL0hJu/view?usp=shari
      + 피격 데미지, 퀘스트 진행 아이콘
 ---
 ## 5. 플레이 영상
-![Image](https://github.com/user-attachments/assets/692bba87-e72f-4667-8612-16271e6713af)
+<img src="[https://github.com/user-attachments/assets/5f55c68a-f9c1-44ea-98f9-ff27e1c99e9b](https://github.com/user-attachments/assets/692bba87-e72f-4667-8612-16271e6713af)" width="250" height="250" />
+
 https://youtu.be/goe68owyowc
+
 ---
 ## 6. 다운로드 링크
 https://drive.google.com/file/d/1Dk5PRMGt9yXcmOjbiupmyL-QjNs_2-db/view?usp=sharing
