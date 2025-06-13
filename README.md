@@ -66,7 +66,7 @@ https://youtu.be/iK_kFlgDOIk
 
 ---
 ## 6. 다운로드 링크
-https://drive.google.com/file/d/1Z8ArDd7xLtLZtfNh0_VfE1qlmN3YrBbr/view?usp=sharing
+https://drive.google.com/file/d/1Z8ArDd7xLtLZtfNh0_VfE1qlmN3YrBbr/view?usp=drive_link
 
 # LastPage Portfolio
 ---
