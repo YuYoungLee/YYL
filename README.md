@@ -61,6 +61,7 @@ https://1drv.ms/p/c/114382788941cec0/EcDOQYl4gkMggBFgfgAAAAAB9vmMTDPrmot8Dz7-YLa
 ---
 ## 5. 플레이 영상
 <img src="https://github.com/user-attachments/assets/71ee021a-f11c-40ec-b180-aa2435bf3ad2" width="250" height="250" />
+
 https://youtu.be/AfGTK478ias
 
 ---
